@@ -1,0 +1,43 @@
+{
+  "name": "feathers-async-boot",
+  "version": "0.0.0",
+  "description": "booting feathersjs asynchron",
+  "main": "lib/",
+  "directories": {
+    "lib": "src",
+    "test": "test/"
+  },
+  "scripts": {
+    "test": "jest --forceExit",
+    "dev": "ts-node-dev --no-notify src/",
+    "compile": "shx rm -rf lib/ && tsc",
+    "travis": "npm run test; npm run compile"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/idaho/feathers-async-boot.git"
+  },
+  "keywords": [
+    "feathers",
+    "async",
+    "asynchron",
+    "boot",
+    "bootstrap",
+    "running",
+    "start"
+  ],
+  "author": "idaho",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/idaho/feathers-async-boot/issues"
+  },
+  "homepage": "https://github.com/idaho/feathers-async-boot#readme",
+  "devDependencies": {
+    "jest": "^25.2.1",
+    "shx": "^0.3.2",
+    "ts-jest": "^25.2.1",
+    "ts-node-dev": "^1.0.0-pre.44",
+    "tslint": "^6.1.0",
+    "typescript": "^3.8.3"
+  }
+}
