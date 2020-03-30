@@ -17,10 +17,9 @@ app.bootstrap([
   asyncModuleC
 ]);
 
-
 app
-  .start(ErrorHandling.IGNORE)
+  .start(ErrorHandling.WARN)
   .then(res => {
     const server = app.listen(3040);
-    server.on('listening', () => console.log(`server started @ port ${server.address().port}`));
+    server.on('listening', () => console.log(`server started @ port ${server.address().port}`, `warnings: ${res}`));
   });

@@ -6,22 +6,22 @@ import boot from '../src/index';
 import BootErrorHandling from '../src/errorhandling';
 
 describe('adding boot to application', () => {
-  it('adds the start method onto the application', async () => {
+  it('adds the start and bootstrap method onto the application', async () => {
     const app: Application = express(feathers());
 
-    app.configure(boot());
+    app.configure(boot);
 
-    expect.assertions(1);
+    expect.assertions(2);
+    expect(app.bootstrap).toBeInstanceOf(Function);
     expect(app.start).toBeInstanceOf(Function);
   });
-
 
   it('should be solve when strap errors but error handling is IGNORE', async () => {
     const app: Application = express(feathers());
 
     const mock = {
       onError: BootErrorHandling.IGNORE,
-      straps: [
+      bootstraps: [
         () => {
           return new Promise((resolve, reject) => {
             setTimeout(() => { reject('a') }, 1);
@@ -35,12 +35,39 @@ describe('adding boot to application', () => {
       ]
     };
 
-    app.configure(boot(mock));
+    app.configure(boot);
+    app.bootstrap(mock.bootstraps);
 
-    const result = await app.start();
+    const result = await app.start(mock.onError);
     expect.assertions(1);
 
     expect(result).toBe(true);
+  });
+
+  it('should concat all bootstrap modules given by multiple bootstrap() calls', async () => {
+    const app: Application = express(feathers());
+
+    const cb = () => {
+      return new Promise(resolve => {
+        setTimeout(() => { app.set('runs', (app.get('runs') || 0) + 1); resolve('a') }, 1);
+      })
+    };
+
+    const mock = {
+      bootstraps: {
+        first: [cb, cb],
+        second: [cb, cb],
+      }
+    };
+
+    app.configure(boot);
+    app.bootstrap(mock.bootstraps.first);
+    app.bootstrap(mock.bootstraps.second);
+
+    await app.start();
+    expect.assertions(1);
+
+    expect(app.get('runs')).toBe(4);
   });
 
   it('should be solve when strap errors but error handling is IGNORE, should wait for all results', async () => {
@@ -48,7 +75,7 @@ describe('adding boot to application', () => {
 
     const mock = {
       onError: BootErrorHandling.IGNORE,
-      straps: [
+      bootstraps: [
         () => {
           return new Promise((resolve, reject) => {
             setTimeout(() => { reject('a') }, 1);
@@ -62,9 +89,10 @@ describe('adding boot to application', () => {
       ]
     };
 
-    app.configure(boot(mock));
+    app.configure(boot);
+    app.bootstrap(mock.bootstraps);
 
-    const result = await app.start();
+    const result = await app.start(mock.onError);
     expect.assertions(1);
 
     expect(result).toBe(true);
@@ -75,7 +103,7 @@ describe('adding boot to application', () => {
 
     const mock = {
       onError: BootErrorHandling.ABORT,
-      straps: [
+      bootstraps: [
         () => {
           return new Promise((resolve, reject) => {
             setTimeout(() => { reject('a') }, 1);
@@ -89,10 +117,11 @@ describe('adding boot to application', () => {
       ]
     };
 
-    app.configure(boot(mock));
+    app.configure(boot);
+    app.bootstrap(mock.bootstraps);
 
     try {
-      await app.start();
+      await app.start(mock.onError);
     } catch (e) {
       expect.assertions(1);
       expect(e).toBe('a');
@@ -104,7 +133,7 @@ describe('adding boot to application', () => {
 
     const mock = {
       onError: BootErrorHandling.ABORT,
-      straps: [
+      bootstraps: [
         () => {
           return new Promise((resolve, reject) => {
             setTimeout(() => { reject('a') }, 1);
@@ -118,7 +147,37 @@ describe('adding boot to application', () => {
       ]
     };
 
-    app.configure(boot(mock));
+    app.configure(boot);
+    app.bootstrap(mock.bootstraps);
+
+    try {
+      await app.start(mock.onError);
+    } catch (e) {
+      expect.assertions(1);
+      expect(e).toBe('a, b');
+    }
+  });
+
+  it('aborts starting the application when no param is given to start ', async () => {
+    const app: Application = express(feathers());
+
+    const mock = {
+      bootstraps: [
+        () => {
+          return new Promise((resolve, reject) => {
+            setTimeout(() => { reject('a') }, 1);
+          })
+        },
+        () => {
+          return new Promise((resolve, reject) => {
+            setTimeout(() => { reject('b') }, 1);
+          })
+        }
+      ]
+    };
+
+    app.configure(boot);
+    app.bootstrap(mock.bootstraps);
 
     try {
       await app.start();
@@ -126,5 +185,34 @@ describe('adding boot to application', () => {
       expect.assertions(1);
       expect(e).toBe('a, b');
     }
+  });
+
+  it('should be resolve when set onError = warn, all rejected messages are concated', async () => {
+    const app: Application = express(feathers());
+
+    const mock = {
+      onError: BootErrorHandling.WARN,
+      bootstraps: [
+        () => {
+          return new Promise((resolve, reject) => {
+            setTimeout(() => { reject('a') }, 1);
+          })
+        },
+        () => {
+          return new Promise((resolve, reject) => {
+            setTimeout(() => { reject('b') }, 1);
+          })
+        }
+      ]
+    };
+
+    app.configure(boot);
+    app.bootstrap(mock.bootstraps);
+
+    const result = await app.start(mock.onError);
+
+    expect.assertions(1);
+    expect(result).toBe('a, b');
+
   });
 });

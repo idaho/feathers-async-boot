@@ -3,17 +3,16 @@ const express = require('@feathersjs/express');
 
 const boot = require('../lib/index');
 
-const asyncModuleA = require('./async-module-a');
-const asyncModuleB = require('./async-module-b');
+const asyncModuleA = require('./modules/async-module-a');
+const asyncModuleB = require('./modules/async-module-b');
 
 const app = express(feathers());
 
-app.configure(boot({
-  straps: [
-    asyncModuleA,
-    asyncModuleB
-  ]
-}));
+app.configure(boot);
+app.bootstrap([
+  asyncModuleA,
+  asyncModuleB
+]);
 
 app
   .start()
