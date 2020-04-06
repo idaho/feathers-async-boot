@@ -7,6 +7,7 @@
     "npm": ">= 5"
   },
   "main": "lib/",
+  "types": "./index.d.ts",
   "directories": {
     "lib": "src",
     "test": "test/"
@@ -14,8 +15,10 @@
   "scripts": {
     "compile": "shx rm -rf lib/ && tsc",
     "dev": "ts-node-dev --no-notify src/",
-    "test": "jest --forceExit",
-    "travis": "npm run test; npm run compile"
+    "test": "jest --coverage",
+    "test:watch": "jest --watch",
+    "travis": "npm run test; npm run compile",
+    "prepublish": "npm run compile"
   },
   "repository": {
     "type": "git",
@@ -40,10 +43,10 @@
     "@feathersjs/express": "^4.5.2",
     "@feathersjs/feathers": "^4.5.2",
     "@types/jest": "^25.1.4",
+    "@types/node": "^13.11.0",
     "jest": "^25.2.1",
     "shx": "^0.3.2",
     "ts-jest": "^25.2.1",
-    "ts-node-dev": "^1.0.0-pre.44",
     "tslint": "^6.1.0",
     "typescript": "^3.8.3"
   },

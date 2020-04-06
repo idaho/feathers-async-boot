@@ -5,9 +5,12 @@
     "outDir": "./lib",
     "rootDir": "./src",
     "strict": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "declaration": true,
   },
   "exclude": [
-    "test"
+    "test",
+    "node_modules",
+    "dist"
   ]
 }
