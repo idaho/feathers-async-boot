@@ -1,6 +1,6 @@
 # feathers-async-boot
 
-[![Build Status](https://travis-ci.org/idaho/feathers-async-boot.png)](https://travis-ci.org/idaho/feathers-async-boot)
+[![Build Status](https://travis-ci.org/idaho/feathers-async-boot.svg?branch=master)](https://travis-ci.org/idaho/feathers-async-boot)
 [![Node.js CI](https://github.com/idaho/feathers-async-boot/workflows/Node.js%20CI/badge.svg)](https://github.com/idaho/feathers-async-boot/actions?query=workflow:%22Node.js+CI%22)
 
 Booting FeathersJS asynchron.
