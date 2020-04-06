@@ -1,5 +1,6 @@
 import { Application } from '@feathersjs/feathers';
 import BootErrorHandling from './errorhandling';
+import { BootModule } from '../index.d';
 
 enum BootStrapResultTypes {
   SUCCESS = 'success',
@@ -11,21 +12,19 @@ interface BootStrapResult {
   msg?: any
 }
 
-declare module '@feathersjs/feathers' {
-  interface Application<ServiceTypes = {}> {
-    bootstrap(addModulesToBoot: Array<BootModule>): void;
-    start(onError?: BootErrorHandling): Promise<boolean | string>;
-  }
-}
-
-interface BootModule {
-  (app?: Application): Promise<any>
-}
-
 export = function (app: Application) {
   let modulesToBoot: Array<BootModule> = [];
 
-  app.bootstrap = function (addModulesToBoot: Array<BootModule>): void {
+  app.bootstrap = bootStrap;
+  app._bootinfo = {
+    modulesrun: 0
+  };
+
+  function bootStrap(addModulesToBoot: Array<BootModule> | BootModule): void {
+    if (!Array.isArray(addModulesToBoot)) {
+      addModulesToBoot = [addModulesToBoot];
+    }
+
     modulesToBoot = [
       ...modulesToBoot,
       ...addModulesToBoot
@@ -44,6 +43,8 @@ export = function (app: Application) {
         .then(results => {
           const errors: Array<BootStrapResult> = results.filter(result => result.type === BootStrapResultTypes.ERR);
           const messages: string = errors.length > 0 ? errors.map(e => e.msg).join(', ') : '';
+
+          app._bootinfo.modulesrun = results.length;
 
           if (onError === BootErrorHandling.ABORT && errors.length > 0) {
             reject(messages);
