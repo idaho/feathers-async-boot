@@ -15,9 +15,10 @@
   "scripts": {
     "compile": "shx rm -rf lib/ && tsc",
     "dev": "ts-node-dev --no-notify src/",
-    "test": "jest --coverage",
+    "test": "jest",
     "test:watch": "jest --watch",
     "travis": "npm run test; npm run compile",
+    "codecov": "jest && codecov",
     "prepublish": "npm run compile"
   },
   "repository": {

@@ -1,13 +1,15 @@
 sudo: required
 dist: trusty
-language: node_js
+language: 'node_js'
 node_js:
-  - 10
+  - '12'
+  - '10'
 node_js: 'node'
+install:
+  - npm install -g codecov
 before_script:
   - node -v
   - npm ci
 script:
   - npm run travis
-after_success:
-  - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+  - npm run codecov
