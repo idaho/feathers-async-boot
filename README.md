@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/idaho/feathers-async-boot.svg?branch=master)](https://travis-ci.org/idaho/feathers-async-boot)
 [![Node.js CI](https://github.com/idaho/feathers-async-boot/workflows/Node.js%20CI/badge.svg)](https://github.com/idaho/feathers-async-boot/actions?query=workflow:%22Node.js+CI%22)
 [![codecov](https://codecov.io/gh/idaho/feathers-async-boot/branch/master/graph/badge.svg?token=4F8RQ4KWSQ)](https://codecov.io/gh/idaho/feathers-async-boot)
+[![Maintainability](https://api.codeclimate.com/v1/badges/68167f15dc0b56e49910/maintainability)](https://codeclimate.com/github/idaho/feathers-async-boot/maintainability)
 
 Booting FeathersJS asynchron.
 
