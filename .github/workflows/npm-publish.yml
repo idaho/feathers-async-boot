@@ -26,6 +26,9 @@ jobs:
         registry-url: https://registry.npmjs.org/
     # clean install of your projects' deps. We use "npm ci" to avoid package lock changes
     - run: npm ci
+    # set up git since we will later push to the repo
+    - run: git config --global user.name "GitHub CD bot"
+    - run: git config --global user.email "github-cd-bot@example.com"
     # upgrade npm version in package.json to the tag used in the release.
     - run: npm version ${{ github.event.release.tag_name }}
     # build the project
