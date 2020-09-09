@@ -32,7 +32,7 @@ jobs:
     # upgrade npm version in package.json to the tag used in the release.
     - run: npm version ${{ github.event.release.tag_name }}
     # build the project
-    - run: npm run build
+    - run: npm run compile --if-present
     # run tests just in case
     - run: npm test
     # publish to NPM -> there is one caveat, continue reading for the fix
